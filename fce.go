@@ -5,7 +5,15 @@ import (
 		"strconv"
 		"encoding/json"
 		"github.com/go-resty/resty/v2"
+		"net/http"
+		"github.com/labstack/echo/v4"
 )
+
+func GetText(c echo.Context) error {
+	t := c.QueryParam("text")
+	ch <- t
+	return c.String(http.StatusOK, "text: " + t)
+}
 
 func GetPrice() int {
 	client := resty.New()
@@ -31,7 +39,7 @@ func GetTemp() float32 {
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("http://172.17.0.133:10000/data")
+		Get("http://172.17.0.133:10000/")
 	if err == nil {
 		type Pars struct {
 			Temp	float32 `json:"temperature"`
@@ -48,7 +56,7 @@ func GetPress() float32 {
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("http://172.17.0.133:10000/data")
+		Get("http://172.17.0.133:10000/")
 	if err == nil {
 		type Pars struct {
 			Press	float32 `json:"pressure"`
@@ -65,7 +73,7 @@ func GetIll() int {
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("http://172.17.0.123:10000/data")
+		Get("http://172.17.0.123:10000/")
 	if err == nil {
 		type Pars struct {
 			Ill		int `json:"illuminance"`

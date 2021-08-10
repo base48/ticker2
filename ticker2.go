@@ -4,6 +4,7 @@ import (
 		"fmt"
 		"time"
 		ws2811 "github.com/rpi-ws281x/rpi-ws281x-go"
+		"github.com/labstack/echo/v4"
 )
 
 const (
@@ -16,6 +17,8 @@ const (
 	ledc = (panels*panel)+first // ((8*5 from top to bottom) * 5 panels) + leds from start 
 )
 
+var ch (chan string)
+
 func main(){
 	opt := ws2811.DefaultOptions
 	opt.Channels[0].Brightness = brig
@@ -26,13 +29,26 @@ func main(){
 
 	lt := time.Now()
 	format := "0"
+	text := ""
 	stav := 0
+	count := 0
 	var fg, bg uint32
+
+	// start REST-API srv
+	ch = make(chan string)
+	e := echo.New()
+	e.GET("/", GetText)
+	go e.Start(":10001")
 
 	dev.Init()
 	defer dev.Fini()
 	for {
 		t := time.Now()
+		select { case text = <-ch:
+			stav=3
+			count=10
+		default: }
+
 		if t.After(lt.Add(ti * time.Second)) {
 			il := GetIll()
 			if stav == 0 {
@@ -45,12 +61,18 @@ func main(){
 				fg, bg = 0xff0040, 0x000000
 				if il <= ilt { fg, bg = 0x600010, 0x000000 }
 				stav = 2
-			} else {
+			} else if stav == 2 {
 				format = fmt.Sprintf("%8.1f", GetPress()/100)
 				fg, bg = 0x00ff00, 0x000000
 				if il <= ilt { fg, bg = 0x006000, 0x000000 }
 				stav = 0
+			} else {
+				format = text
+				fg, bg = 0xff8800, 0x000000
+				if il <= ilt { fg, bg = 0x603000, 0x000000 }
+				if count == 0 {	stav = 0 } else { count-- }
 			}
+
 			fmt.Println(format)
 			lt = t
 		}
