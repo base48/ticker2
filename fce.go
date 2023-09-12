@@ -22,10 +22,11 @@ func GetPrice() int {
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("https://api.bitfinex.com/v1/pubticker/btcusd")
+		Get("https://api.gemini.com/v1/pubticker/btcusd")
+//		Get("https://api.bitfinex.com/v1/pubticker/btcusd")
 	if err == nil {
 		type Pars struct {
-			Price string `json:"last_price"`
+			Price string `json:"last"`
 		}
 		pars := Pars{}
 		json.Unmarshal(resp.Body(), &pars)
@@ -75,7 +76,7 @@ func GetIll() int {
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("http://172.17.0.123:10000/")
+		Get("http://localhost:10000/")
 	if err == nil {
 		type Pars struct {
 			Ill int `json:"illuminance"`
