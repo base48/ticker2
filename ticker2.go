@@ -62,7 +62,8 @@ func main(){
 				if il <= ilt { fg, bg = 0x600010, 0x000000 }
 				stav = 2
 			} else if stav == 2 {
-				format = fmt.Sprintf("%8.1f", GetPress()/100)
+				format = fmt.Sprintf("%8.1f", GetHum())
+			//	format = fmt.Sprintf("%8.1f", GetPress()/100)
 				fg, bg = 0x00ff00, 0x000000
 				if il <= ilt { fg, bg = 0x006000, 0x000000 }
 				stav = 0

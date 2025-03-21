@@ -42,7 +42,7 @@ func GetTemp() float32 {
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("http://172.17.0.133:10000/")
+		Get("http://osw.local:10000/")
 	if err == nil {
 		type Pars struct {
 			Temp float32 `json:"temperature"`
@@ -59,7 +59,7 @@ func GetPress() float32 {
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("http://172.17.0.133:10000/")
+		Get("http://osw.local:10000/")
 	if err == nil {
 		type Pars struct {
 			Press float32 `json:"pressure"`
@@ -70,6 +70,24 @@ func GetPress() float32 {
 	}
 	return 0
 }
+
+func GetHum() float32 {
+	client := resty.New()
+
+	resp, err := client.R().
+		EnableTrace().
+		Get("http://osw.local:10000/")
+	if err == nil {
+		type Pars struct {
+			Press float32 `json:"humidity"`
+		}
+		pars := Pars{}
+		json.Unmarshal(resp.Body(), &pars)
+		return pars.Press
+	}
+	return 0
+}
+
 
 func GetIll() int {
 	client := resty.New()
