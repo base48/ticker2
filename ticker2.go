@@ -57,15 +57,16 @@ func main(){
 				if il <= ilt { fg, bg = 0x706000, 0x000000 }
 				stav = 1
 			} else if stav == 1 {
-				format = fmt.Sprintf("%8.1f", GetTemp())
+				format = fmt.Sprintf("IN%6.1f", GetTemp())
 				fg, bg = 0xff0040, 0x000000
 				if il <= ilt { fg, bg = 0x600010, 0x000000 }
 				stav = 2
 			} else if stav == 2 {
-				format = fmt.Sprintf("%8.1f", GetHum())
+				format = fmt.Sprintf("OUT%5.1f", GetTempOut())
+			//	format = fmt.Sprintf("%8.1f", GetHum())
 			//	format = fmt.Sprintf("%8.1f", GetPress()/100)
-				fg, bg = 0x00ff00, 0x000000
-				if il <= ilt { fg, bg = 0x006000, 0x000000 }
+				fg, bg = 0xee40ff, 0x000000
+				if il <= ilt { fg, bg = 0x200560, 0x000000 }
 				stav = 0
 			} else {
 				format = text

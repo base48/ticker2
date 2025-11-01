@@ -37,19 +37,42 @@ func GetPrice() int {
 	return 0
 }
 
-func GetTemp() float32 {
+func GetTemp() float64 {
 	client := resty.New()
 
 	resp, err := client.R().
 		EnableTrace().
-		Get("http://osw.local:10000/")
+		SetHeader("Authorization", "Bearer " + secret).
+		SetHeader("Content-Type", "application/json").
+		Get("http://10.48.0.20:8123/api/states/sensor.osw_esp_temperature_aht20")
 	if err == nil {
 		type Pars struct {
-			Temp float32 `json:"temperature"`
+			Temp string `json:"state"`
 		}
 		pars := Pars{}
 		json.Unmarshal(resp.Body(), &pars)
-		return pars.Temp
+		t, _ := strconv.ParseFloat(pars.Temp, 8)
+		return t
+	}
+	return 0
+}
+
+func GetTempOut() float64 {
+	client := resty.New()
+
+	resp, err := client.R().
+		EnableTrace().
+		SetHeader("Authorization", "Bearer " + secret).
+		SetHeader("Content-Type", "application/json").
+		Get("http://10.48.0.20:8123/api/states/sensor.tze200_vs0skpuc_ts0601_teplota")
+	if err == nil {
+		type Pars struct {
+			Temp string `json:"state"`
+		}
+		pars := Pars{}
+		json.Unmarshal(resp.Body(), &pars)
+		t, _ := strconv.ParseFloat(pars.Temp, 8)
+		return t
 	}
 	return 0
 }
