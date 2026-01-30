@@ -32,6 +32,8 @@ func main(){
 	text := ""
 	stav := 0
 	count := 0
+	last_price := 0
+	cycles_till_price_update := 0
 	var fg, bg uint32
 
 	// start REST-API srv
@@ -52,7 +54,12 @@ func main(){
 		if t.After(lt.Add(ti * time.Second)) {
 			il := GetIll()
 			if stav == 0 {
-				format = fmt.Sprintf("%8d", GetPrice())
+				cycles_till_price_update--
+				if cycles_till_price_update < 0 {
+					last_price = GetPrice()
+					cycles_till_price_update = 30
+				}
+				format = fmt.Sprintf("%8d", last_price)
 				fg, bg = 0xffff00, 0x000000
 				if il <= ilt { fg, bg = 0x706000, 0x000000 }
 				stav = 1
