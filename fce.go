@@ -44,7 +44,7 @@ func GetTemp() float64 {
 		EnableTrace().
 		SetHeader("Authorization", "Bearer " + secret).
 		SetHeader("Content-Type", "application/json").
-		Get("http://10.48.0.20:8123/api/states/sensor.osw_esp_temperature_aht20")
+		Get("http://10.48.0.20:8123/api/states/sensor.hackerspace_temperature_helper")
 	if err == nil {
 		type Pars struct {
 			Temp string `json:"state"`
@@ -64,7 +64,7 @@ func GetTempOut() float64 {
 		EnableTrace().
 		SetHeader("Authorization", "Bearer " + secret).
 		SetHeader("Content-Type", "application/json").
-		Get("http://10.48.0.20:8123/api/states/sensor.tze200_vs0skpuc_ts0601_teplota")
+		Get("http://10.48.0.20:8123/api/states/sensor.garden_temperature_helper")
 	if err == nil {
 		type Pars struct {
 			Temp string `json:"state"`
